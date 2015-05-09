@@ -18,8 +18,10 @@ source $BUILDPACK_DIR/bin/util
 
 export_env_dir ${ENV_DIR}
 
+MONO_VERSION="4.0.1"
+MONO_VM_BINARY="https://github.com/yngndrw/mono-builder/releases/download/1.0.0/mono-${MONO_VERSION}.tar.gz"
+
 : ${DEPENDENCY_S3_BUCKET_PATH:="http://s3.amazonaws.com/mono-dependencies"}
-: ${MONO_VERSION:="3.10.0"}
 : ${LIBUV_VERSION:="1.2.0"}
 : ${NODE_VERSION:="0.11.14"}
 : ${KVM_BRANCH:="master"}
@@ -41,7 +43,7 @@ SRC_DIR=`mktemp -d`
 mkdir -p ${CACHE_DIR}
 
 MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
-conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
+conditional_download $MONO_VM_BINARY ${MONO_CACHE_LOCATION}
 
 # Copy mono from cache to where we're building the slug
 cp -r ${MONO_CACHE_LOCATION}/mono ${BUILD_DIR}/.
