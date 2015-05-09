@@ -42,6 +42,7 @@ SRC_DIR=`mktemp -d`
 
 mkdir -p ${CACHE_DIR}
 
+echo @ Checking Mono ${MONO_VERSION} cache
 MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
 conditional_download $MONO_VM_BINARY ${MONO_CACHE_LOCATION}
 
@@ -53,10 +54,14 @@ ln -s ${BUILD_DIR}/mono /app
 export PATH="/app/mono/bin:${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 
+echo @ Updating certificates
 mozroots --import --sync --quiet
+echo @ Adding NuGet certificate
 yes | certmgr -ssl https://nuget.org
 cp -r ~/.config ${BUILD_DIR}/.
 
+
+echo @ Installing Node
 # Install Node and grunt-cli
 NODE_CACHE_LOCATION=${CACHE_DIR}/${STACK}/node-${NODE_VERSION}
 conditional_download http://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz ${NODE_CACHE_LOCATION}
@@ -72,6 +77,7 @@ fi
 #source <(curl -sL https://raw.githubusercontent.com/aspnet/Home/${KVM_BRANCH}/kvm.sh)
 #kvm install $KRE_VERSION -a default
 
+echo @ Installing DNX
 # Install DNX
 # TODO: consider not doing this on every build
 export DNX_USER_HOME =${CACHE_DIR}/dnx
@@ -87,6 +93,7 @@ dnvm alias default | xargs -i ln -s $DNX_USER_HOME/runtimes/{} $DNX_USER_HOME/ru
 # Add DNX to the build output
 cp -r ${DNX_USER_HOME} ${BUILD_DIR}/.
 
+echo @ Locating project
 DEPLOYMENT_FILE_LOCATION=${SRC_DIR}/.deployment
 if [ -n "$PROJECT" ]; then
     PROJECT_JSON_FILE=${SRC_DIR}/${PROJECT}
@@ -105,6 +112,7 @@ echo "Building ${PROJECT_JSON_FILE}"
 #KPM_CACHE_LOCATION=${CACHE_DIR}/kpm
 #kpm restore $K_FLAGS --packages ${KPM_CACHE_LOCATION}/.k/packages ${PROJECT_JSON_FILE}
 
+echo @ Updating packages
 DNU_CACHE_LOCATION=${CACHE_DIR}/dnu
 dnu restore $D_FLAGS --source https://www.myget.org/F/aspnetvnext/api/v2/ --fallbacksource https://www.nuget.org/api/v2/ --packages ${DNU_CACHE_LOCATION}/.dnx/packages ${PROJECT_JSON_FILE}
 
@@ -120,6 +128,7 @@ ln -s ${DNU_CACHE_LOCATION}/.dnx ~/.dnx
 # Clean out core-stuff that we don't need in the slug
 #find ${BUILD_DIR} -name aspnetcore50 -print0 | xargs -0 rm -r --
 
+echo @ Packaging project
 dnu pack --dependencies --out ${BUILD_DIR} $D_FLAGS --configuration Release ${PROJECT_JSON_FILE}
 # Clean out core-stuff that we don't need in the slug
 find ${BUILD_DIR} -name aspnetcore50 -print0 | xargs -0 rm -r --
@@ -132,6 +141,7 @@ find ${BUILD_DIR} -name aspnetcore50 -print0 | xargs -0 rm -r --
 #rm -rf ${BUILD_DIR}/kre/runtimes/default
 #mv ${BUILD_DIR}/kre/runtimes/${KRE} ${BUILD_DIR}/kre/runtimes/default
 
+echo @ Selecting DNX runtime
 # TODO: This is not great
 # Rename the DNX to `default` so that we know where it's at
 # If we don't do this, there's symlink breakage
@@ -142,6 +152,7 @@ mv ${BUILD_DIR}/dnx/runtimes/${DNX} ${BUILD_DIR}/dnx/runtimes/default
 mkdir -p ${BUILD_DIR}/.profile.d
 cp -n ${BUILDPACK_DIR}/.profile.d/* ${BUILD_DIR}/.profile.d/
 
+echo @ Checking LibUV ${LIBUV_VERSION} cache
 LIBUV_CACHE_PATH=${CACHE_DIR}/${STACK}/libuv
 conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/libuv-${LIBUV_VERSION}.tar.gz ${LIBUV_CACHE_PATH}
 cp -r ${LIBUV_CACHE_PATH}/libuv ${BUILD_DIR}/.
@@ -155,6 +166,7 @@ cp -r ${LIBUV_CACHE_PATH}/libuv ${BUILD_DIR}/.
 #rm -rf /usr/local/src/libuv-$LIBUV_VERSION
 #ldconfig
 
+echo @ Preparing procfile
 if [ -e ${SRC_DIR}/Procfile ]; then
     cp ${SRC_DIR}/Procfile ${BUILD_DIR}
 else
