@@ -52,6 +52,7 @@ export PATH="/app/mono/bin:${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 
 mozroots --import --sync --quiet
+yes | certmgr -ssl https://nuget.org
 cp -r ~/.config ${BUILD_DIR}/.
 
 # Install Node and grunt-cli
