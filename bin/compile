@@ -75,7 +75,7 @@ export DNX_USER_HOME=${CACHE_DIR}/dnx
 curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_USER_HOME=$DNX_USER_HOME DNX_BRANCH=v$DNX_VERSION sh
 source $DNX_USER_HOME/dnvm/dnvm.sh
 dnvm install $DNX_VERSION -a default
-dnvm alias default | xargs -i ln -s $DNX_USER_HOME/runtimes/{} $DNX_USER_HOME/runtimes/default"
+dnvm alias default | xargs -i ln -s "$DNX_USER_HOME/runtimes/{} $DNX_USER_HOME/runtimes/default"
 
 # Add DNX to the build output
 cp -r ${DNX_USER_HOME} ${BUILD_DIR}/.
