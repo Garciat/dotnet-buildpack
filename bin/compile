@@ -18,12 +18,12 @@ source $BUILDPACK_DIR/bin/util
 
 export_env_dir ${ENV_DIR}
 
-: ${DEPENDENCY_S3_BUCKET_PATH:="http://s3.amazonaws.com/mono-dependencies"}
-: ${MONO_VERSION:="4.0.1"}
-: ${MONO_VM_BINARY:="https://github.com/yngndrw/mono-builder/releases/download/1.0.0/mono-${MONO_VERSION}.tar.gz"}
-: ${LIBUV_VERSION:="1.2.0"}
-: ${NODE_VERSION:="0.11.14"}
-: ${DNX_VERSION:="1.0.0-beta4"}
+DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
+MONO_VERSION="4.0.1"
+MONO_VM_BINARY="https://github.com/yngndrw/mono-builder/releases/download/1.0.0/mono-${MONO_VERSION}.tar.gz"
+LIBUV_VERSION="1.2.0"
+NODE_VERSION="0.11.14"
+DNX_VERSION="1.0.0-beta4"
 
 if [ -n "$BUILD_DEBUG" ]; then
     D_FLAGS=""
