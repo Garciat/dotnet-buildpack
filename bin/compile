@@ -25,11 +25,7 @@ LIBUV_VERSION="1.2.0"
 NODE_VERSION="0.11.14"
 DNX_VERSION="1.0.0-beta4"
 
-if [ -n "$BUILD_DEBUG" ]; then
-    D_FLAGS=""
-else
-    D_FLAGS="--quiet"
-fi
+D_FLAGS=""
 
 SRC_DIR=`mktemp -d`
 # Move the app source code into temporary src dir using subshell to not leak shopt
@@ -131,7 +127,7 @@ else
     if [ $( echo "${ROOTS}" | wc -l ) -gt 0 ]; then
 	APP_ROOT=$(echo "$ROOTS" | head -1)
 	cat << EOT >> ${BUILD_DIR}/Procfile
-web: ./kestrel --configuration Release --server.urls http://+:\$PORT
+web: sleep 2d | ./kestrel --configuration Release --server.urls http://+:\$PORT
 EOT
     fi
 fi
