@@ -97,7 +97,9 @@ echo "Building ${PROJECT_JSON_FILE}"
 
 echo @ Updating packages
 DNU_CACHE_LOCATION=${CACHE_DIR}/dnu
-dnu restore $D_FLAGS --packages ${DNU_CACHE_LOCATION}/.dnx/packages ${PROJECT_JSON_FILE}
+DNU_PACKAGES_LOCATION=${DNU_CACHE_LOCATION}/.dnx/packages
+mkdir -p ${DNU_PACKAGES_LOCATION}
+dnu restore $D_FLAGS --packages ${DNU_PACKAGES_LOCATION} ${PROJECT_JSON_FILE}
 
 # Link in the packages dir so that `pack` can find packages 
 ln -s ${DNU_CACHE_LOCATION}/.dnx ~/.dnx
