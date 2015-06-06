@@ -56,7 +56,7 @@ export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 #mozroots --import --sync
 #echo @ Adding NuGet certificate
 #yes | certmgr -ssl https://nuget.org
-cp -r ~/.config ${BUILD_DIR}/.
+#cp -r ~/.config ${BUILD_DIR}/.
 
 
 echo @ Installing Node
