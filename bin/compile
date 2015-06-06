@@ -83,10 +83,10 @@ cp -r ${DNX_USER_HOME} ${BUILD_DIR}/.
 echo @ Locating project
 DEPLOYMENT_FILE_LOCATION=${SRC_DIR}/.deployment
 if [ -n "$PROJECT" ]; then
-    PROJECT_JSON_FILE=${SRC_DIR}/${PROJECT}
+    PROJECT_JSON_FILE=${SRC_DIR}/${PROJECT}/project.json
     echo "Project file configured in PROJECT environment variable"
 elif [ -e ${DEPLOYMENT_FILE_LOCATION} ]; then
-    PROJECT_JSON_FILE=${SRC_DIR}/$(awk -F "=" '/project/ {print $2}' ${DEPLOYMENT_FILE_LOCATION} | tr -d ' ')
+    PROJECT_JSON_FILE=${SRC_DIR}/$(awk -F "=" '/project/ {print $2}' ${DEPLOYMENT_FILE_LOCATION} | tr -d ' ')/project.json
     echo "Project file configured in .deployment file"
 else
     PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
